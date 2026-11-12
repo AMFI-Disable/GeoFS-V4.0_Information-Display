@@ -1,5 +1,9 @@
 # Changelog
 
+
+## [0.1.1] - Aircraft initialization fixes
+
+- Wait for initialized aircraft identity before rendering flight information.
 ## [0.1.0] - V4 compatibility fixes
 
 - Uses V4 foundation dependencies, guards aircraft transitions, and updates ground speed, AGL, glideslope deviation, and zero-valued readings.
