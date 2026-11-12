@@ -5,11 +5,11 @@
 - Shows multi-engine throttle telemetry and dynamically resolved aircraft names.
 - Live GeoFS V4 validation is pending.
 
-
-## [0.1.1] - Aircraft initialization fixes
+## [0.1.1] - Aircraft Initialization Fixes
 
 - Wait for initialized aircraft identity before rendering flight information.
-## [0.1.0] - V4 compatibility fixes
+
+## [0.1.0] - V4 Compatibility Fixes
 
 - Uses V4 foundation dependencies, guards aircraft transitions, and updates ground speed, AGL, glideslope deviation, and zero-valued readings.
 
