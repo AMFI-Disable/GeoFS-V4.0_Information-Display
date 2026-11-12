@@ -109,8 +109,8 @@
 // @icon                https://www.geo-fs.com/images/icons/favicon.ico
 // @match               https://beta.geo-fs.com/geofs.php*
 // @match               https://www.geo-fs.com/geofs.php*
-// @require             https://update.greasyfork.org/scripts/581510/code.js
-// @require             https://update.greasyfork.org/scripts/581511/code.js
+// @require             https://update.greasyfork.org/scripts/604885/code.js
+// @require             https://update.greasyfork.org/scripts/604887/code.js
 // @grant               none
 // @license             MIT
 // @copyright           2026, AMFI-Disable (https://greasyfork.org/users/1594049)
@@ -206,7 +206,7 @@
             ${safeCell('G G-FORCE', 'N/A', '', 'hud-g')}
             ${safeCell('FT AGL', 'N/A', '', 'hud-agl')}
             ${safeCell('KTS GS', 'N/A', '', 'hud-gs')} 
-            ${safeCell('DEG GSLOPE', 'N/A', '', 'hud-gslope')}
+            ${safeCell('DEG GS DEV', 'N/A', '', 'hud-gslope')}
         `;
         
         // Registration: Inject into the HUD tab manager
@@ -248,7 +248,7 @@
                         ];
                         const joke = jokes[Math.floor(Math.random() * jokes.length)];
                         
-                        const rawName = ac.definition.externalName || ac.definition.name || "Unknown Aircraft";
+                        const rawName = ac.definition?.externalName || ac.definition?.name || "Unknown Aircraft";
                         const cleanName = rawName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                         
                         nameEl.innerHTML = `<span style="opacity: 0.6; font-style: italic;">${joke}</span><br><span style="font-size: 10px; font-weight: 400;">(${cleanName})</span>`;
@@ -288,14 +288,16 @@
             const aoaColor = v.aoa > 16 ? "#ef4444" : (v.aoa > 12 ? "#eab308" : "#fff");
 
             // Element Synchronization
-            updateCell('hud-kias', (v.kias ? v.kias.toFixed(1) : "N/A") + trend);
-            updateCell('hud-mach', v.mach ? v.mach.toFixed(2) : "N/A");
-            updateCell('hud-alt', v.altitude ? Math.round(v.altitude).toLocaleString() : "N/A");
+            updateCell('hud-kias', (Number.isFinite(v.kias) ? v.kias.toFixed(1) : "N/A") + trend);
+            updateCell('hud-mach', Number.isFinite(v.mach) ? v.mach.toFixed(2) : "N/A");
+            updateCell('hud-alt', Number.isFinite(v.altitude) ? Math.round(v.altitude).toLocaleString() : "N/A");
             updateCell('hud-vs', (v.verticalSpeed !== undefined ? Math.round(v.verticalSpeed) : "N/A"), vsColor);
-            updateCell('hud-hdg', v.heading360 ? Math.round(v.heading360).toString().padStart(3, '0') : "N/A");
-            updateCell('hud-g', (v.loadFactor ? v.loadFactor.toFixed(1) : "N/A"), gColor);
-            updateCell('hud-aoa', (v.aoa ? v.aoa.toFixed(1) : "N/A"), aoaColor);
-            updateCell('hud-gs', v.groundSpeed ? v.groundSpeed.toFixed(1) : "N/A");
+            updateCell('hud-hdg', Number.isFinite(v.heading360) ? Math.round(v.heading360).toString().padStart(3, '0') : "N/A");
+            updateCell('hud-g', (Number.isFinite(v.loadFactor) ? v.loadFactor.toFixed(1) : "N/A"), gColor);
+            updateCell('hud-aoa', (Number.isFinite(v.aoa) ? v.aoa.toFixed(1) : "N/A"), aoaColor);
+            updateCell('hud-gs', Number.isFinite(v.groundSpeedKnt) ? v.groundSpeedKnt.toFixed(1) : "N/A");
+            updateCell('hud-agl', Number.isFinite(v.haglFeet) ? Math.round(v.haglFeet).toLocaleString() : 'N/A');
+            updateCell('hud-gslope', v.NAVVNAV && Number.isFinite(v.NAVGlideAngleDeviation) ? v.NAVGlideAngleDeviation.toFixed(1) : 'N/A');
         }, 100);
     };
 
