@@ -200,6 +200,7 @@
             ${safeCell('FT ALT', 'N/A', '', 'hud-alt')}
             ${safeCell('FPM V/S', 'N/A', '', 'hud-vs')}
             ${safeCell('DEG HDG', 'N/A', '', 'hud-hdg')}
+            ${safeCell('% THR', 'N/A', '', 'hud-thr')}
             <div class="hud-section-header full-width">Additional data</div>
             ${safeCell('M MACH', 'N/A', '', 'hud-mach')}
             ${safeCell('DEG AOA', 'N/A', '', 'hud-aoa')}
@@ -232,15 +233,18 @@
                 const nameEl = document.getElementById('hud-ac-name');
                 const badgeEl = document.getElementById('hud-ac-id-badge');
                 if (nameEl && badgeEl) {
-                    const data = (window.AIRCRAFT_DATA && window.AIRCRAFT_DATA[ac.id]) ? window.AIRCRAFT_DATA[ac.id] : null;
+                    const profile = typeof window.getAircraftProfile === 'function' ? window.getAircraftProfile(ac) : null;
+                    const data = profile || ((window.AIRCRAFT_DATA && window.AIRCRAFT_DATA[ac.id]) ? window.AIRCRAFT_DATA[ac.id] : null);
                     
-                    if (data) {
-                        // Known Aircraft: Use registry name
+                    if (data && data.name && !data.isDynamic) {
                         nameEl.textContent = data.name;
                         badgeEl.style.background = "#dddddd"; 
                         badgeEl.textContent = `REG: ${ac.id}`;
+                    } else if (data && data.name) {
+                        nameEl.textContent = data.name;
+                        badgeEl.style.background = "#38bdf8"; 
+                        badgeEl.textContent = `AUTO: ${ac.id}`;
                     } else {
-                        // Unknown Aircraft: Stochastic "Identity Obfuscation" Logic
                         const jokes = [
                             "Mystery Flying Object", "Classified Area 51 Project", "Paper Plane with Jet Engines",
                             "UFO (Unidentified Flying Object)", "Identity Obscured by Clouds", "Skunkworks Prototype",
@@ -255,7 +259,6 @@
                         badgeEl.style.background = "#94a3b8"; 
                         badgeEl.textContent = `ID: ${ac.id}`;
                     }
-
                 }
             }
 
@@ -298,6 +301,35 @@
             updateCell('hud-gs', Number.isFinite(v.groundSpeedKnt) ? v.groundSpeedKnt.toFixed(1) : "N/A");
             updateCell('hud-agl', Number.isFinite(v.haglFeet) ? Math.round(v.haglFeet).toLocaleString() : 'N/A');
             updateCell('hud-gslope', v.NAVVNAV && Number.isFinite(v.NAVGlideAngleDeviation) ? v.NAVGlideAngleDeviation.toFixed(1) : 'N/A');
+
+            // Multi-Engine Throttle / N1 Readings
+            let thrStr = "0%";
+            const revActive = v.reverser || (typeof controls !== 'undefined' && controls.reversers);
+            const revPrefix = revActive ? "[REV] " : "";
+            if (typeof controls !== 'undefined') {
+                if (controls.throttle1 !== undefined && controls.throttle2 !== undefined) {
+                    const t1 = Math.round((controls.throttle1 || 0) * 100);
+                    const t2 = Math.round((controls.throttle2 || 0) * 100);
+                    if (controls.throttle3 !== undefined && controls.throttle4 !== undefined) {
+                        const t3 = Math.round((controls.throttle3 || 0) * 100);
+                        const t4 = Math.round((controls.throttle4 || 0) * 100);
+                        thrStr = `${revPrefix}${t1}/${t2}/${t3}/${t4}%`;
+                    } else {
+                        thrStr = `${revPrefix}${t1}/${t2}%`;
+                    }
+                } else if (controls.throttleLeft !== undefined && controls.throttleRight !== undefined) {
+                    const tl = Math.round((controls.throttleLeft || 0) * 100);
+                    const tr = Math.round((controls.throttleRight || 0) * 100);
+                    thrStr = `${revPrefix}L:${tl}% R:${tr}%`;
+                } else if (Number.isFinite(controls.throttle)) {
+                    thrStr = `${revPrefix}${Math.round(controls.throttle * 100)}%`;
+                } else if (Number.isFinite(v.rpm)) {
+                    thrStr = `${revPrefix}${Math.round(v.rpm)} RPM`;
+                }
+            } else if (Number.isFinite(v.rpm)) {
+                thrStr = `${revPrefix}${Math.round(v.rpm)} RPM`;
+            }
+            updateCell('hud-thr', thrStr, revActive ? '#f97316' : '#fff');
         }, 100);
     };
 
