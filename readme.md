@@ -13,3 +13,7 @@ The standalone Information Display module for the GeoFS-V4.0 ecosystem, unifying
 Install via Tampermonkey or your preferred userscript manager.
 
 [MIT](license) · © 2026 AMFI-Disable
+
+## Latest Experimental Update
+
+Shows multi-engine throttle telemetry and dynamically resolved aircraft names. This version targets GeoFS V4; in-simulator validation is pending.

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.2] - V4 Integration Update
+
+- Shows multi-engine throttle telemetry and dynamically resolved aircraft names.
+- Live GeoFS V4 validation is pending.
+
 
 ## [0.1.1] - Aircraft initialization fixes
 
