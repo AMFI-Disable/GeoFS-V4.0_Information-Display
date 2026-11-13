@@ -103,7 +103,7 @@
 // @description:ur      عین مطابق فلائٹ ڈیٹا HUD جس میں گلاسمورفک ٹیلی میٹری ریڈ آؤٹس شامل ہیں۔ © 2026 AMFI-Disable. Part of the GeoFS-V4.0_Ecosystem.
 
 // @namespace           https://greasyfork.org/users/1594049
-// @version             0.1.2
+// @version             0.1.3
 // @author              AMFI-Disable
 // @homepageURL         https://sites.google.com/view/geofs-v40-ecosystem/home
 // @icon                https://www.geo-fs.com/images/icons/favicon.ico
@@ -307,19 +307,13 @@
             const revActive = v.reverser || (typeof controls !== 'undefined' && controls.reversers);
             const revPrefix = revActive ? "[REV] " : "";
             if (typeof controls !== 'undefined') {
-                if (controls.throttle1 !== undefined && controls.throttle2 !== undefined) {
-                    const t1 = Math.round((controls.throttle1 || 0) * 100);
-                    const t2 = Math.round((controls.throttle2 || 0) * 100);
-                    if (controls.throttle3 !== undefined && controls.throttle4 !== undefined) {
-                        const t3 = Math.round((controls.throttle3 || 0) * 100);
-                        const t4 = Math.round((controls.throttle4 || 0) * 100);
-                        thrStr = `${revPrefix}${t1}/${t2}/${t3}/${t4}%`;
-                    } else {
-                        thrStr = `${revPrefix}${t1}/${t2}%`;
-                    }
-                } else if (controls.throttleLeft !== undefined && controls.throttleRight !== undefined) {
-                    const tl = Math.round((controls.throttleLeft || 0) * 100);
-                    const tr = Math.round((controls.throttleRight || 0) * 100);
+                const engineCount = Array.isArray(ac.engines) ? ac.engines.length : 0;
+                const channels = Array.from({ length: Math.min(engineCount, 4) }, (_, i) => controls[`throttle${i + 1}`]);
+                if (engineCount >= 2 && channels.length === engineCount && channels.every(Number.isFinite)) {
+                    thrStr = `${revPrefix}${channels.map(value => Math.round(value * 100)).join('/')}%`;
+                } else if (engineCount >= 2 && Number.isFinite(controls.throttleLeft) && Number.isFinite(controls.throttleRight)) {
+                    const tl = Math.round(controls.throttleLeft * 100);
+                    const tr = Math.round(controls.throttleRight * 100);
                     thrStr = `${revPrefix}L:${tl}% R:${tr}%`;
                 } else if (Number.isFinite(controls.throttle)) {
                     thrStr = `${revPrefix}${Math.round(controls.throttle * 100)}%`;

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.3] - Throttle Display
+
+- Use the active aircraft engine count when displaying throttle channels.
+
 ## [0.1.2] - V4 Integration Update
 
 - Shows multi-engine throttle telemetry and dynamically resolved aircraft names.
