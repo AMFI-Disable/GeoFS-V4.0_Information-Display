@@ -1,8 +1,16 @@
 # Changelog
 
-## [0.1.3] - Throttle Display
+All notable changes, features, and architectural capabilities of this project are documented in this file.
 
-- Use the active aircraft engine count when displaying throttle channels.
+---
+
+## [Unreleased]
+
+### Fixed
+
+- **Throttle Display**: Dynamically resolved active aircraft engine counts to accurately display throttle channels for multi-engine aircraft without rendering inactive channels (`information-display_standalone.user.js`).
+
+---
 
 ## [0.1.2] - V4 Integration Update
 
