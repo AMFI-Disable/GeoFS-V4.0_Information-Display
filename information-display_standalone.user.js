@@ -103,7 +103,7 @@
 // @description:ur      عین مطابق فلائٹ ڈیٹا HUD جس میں گلاسمورفک ٹیلی میٹری ریڈ آؤٹس شامل ہیں۔ © 2026 AMFI-Disable. Part of the GeoFS-V4.0_Ecosystem.
 
 // @namespace           https://greasyfork.org/users/1594049
-// @version             1.0.0
+// @version             1.0.1
 // @author              AMFI-Disable
 // @homepageURL         https://sites.google.com/view/geofs-v40-ecosystem/home
 // @icon                https://www.geo-fs.com/images/icons/favicon.ico
